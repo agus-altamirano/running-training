@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Entrenamiento - Running</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF5722;
+            --primary-dark: #E64A19;
+            --secondary: #00BCD4;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --bg-dark: #0A0E27;
+            --bg-card: #151B35;
+            --bg-card-hover: #1A2140;
+            --text-primary: #FFFFFF;
+            --text-secondary: #94A3B8;
+            --border: #1E293B;
+            --accent-blue: #3B82F6;
+            --accent-purple: #8B5CF6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #root {
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -2rem;
+            left: -1.5rem;
+            right: -1.5rem;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-purple) 100%);
+            opacity: 0.1;
+            border-radius: 0 0 50px 50px;
+            filter: blur(40px);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+
+        .stat-info h3 {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-info p {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Week Cards */
+        .weeks-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .week-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .week-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 30px rgba(255, 87, 34, 0.15);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .week-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .week-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .week-info h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .week-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .week-total {
+            text-align: right;
+        }
+
+        .week-total span {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .week-total strong {
+            display: block;
+            font-size: 1.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Training Grid */
+        .training-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .training-row {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 80px 100px 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .training-row:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+        }
+
+        .training-row.completed {
+            opacity: 0.7;
+        }
+
+        .day-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+
+        .training-type {
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .training-type.running {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .training-type.gimnasio {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent-purple);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .training-details {
+            flex: 1;
+        }
+
+        .training-details h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .training-details p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .training-metrics {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox:hover {
+            border-color: var(--primary);
+        }
+
+        .checkbox.checked {
+            background: linear-gradient(135deg, var(--success) 0%, #388E3C 100%);
+            border-color: var(--success);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Input Fields */
+        input[type="number"], input[type="text"] {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            width: 80px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+
+        /* Pace Reference */
+        .pace-reference {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .pace-reference h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .pace-item {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .pace-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .pace-item h4 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pace-item p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Add Week Button */
+        .add-week-container {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .add-week-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+        }
+
+        .add-week-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 87, 34, 0.4);
+        }
+
+        .add-week-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .training-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 100px 120px 1fr 80px;
+            gap: 0.75rem;
+            align-items: center;
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .form-row select,
+        .form-row input {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-row select {
+            cursor: pointer;
+        }
+
+        .form-row input[type="text"] {
+            width: 100%;
+        }
+
+        .form-row input[type="number"] {
+            text-align: center;
+        }
+
+        .form-row select:focus,
+        .form-row input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
+        }
+
+        .remove-day-btn {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-day-btn:hover {
+            background: rgba(244, 67, 54, 0.3);
+        }
+
+        .add-day-btn {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: var(--success);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .add-day-btn:hover {
+            background: rgba(76, 175, 80, 0.3);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-cancel {
+            background: var(--bg-dark);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-cancel:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+        }
+
+        /* Delete Week Button */
+        .delete-week-btn {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .delete-week-btn:hover {
+            background: rgba(244, 67, 54, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .training-row {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .training-metrics {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .app {
+                padding: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const initialData = [
+            {
+                week: 1,
+                days: [
+                    { day: 'Lunes', type: 'Gimnasio', details: 'Piernas + core + movilidad (45\')', km: 0, done: true, effort: 7, pace: '', notes: '' },
+                    { day: 'Martes', type: 'Running', details: 'Rodaje suave', km: 8, done: true, effort: 6, pace: '5\'49\'\'', notes: '' },
+                    { day: 'Miércoles', type: 'Running', details: 'Exterior: 2 km suave + 3 km tempo + 1 km suave', km: 6, done: true, effort: 7, pace: '5\'40\'\' rs - 4\'35\'\' t', notes: '' },
+                    { day: 'Jueves', type: 'Running', details: 'Rodaje suave (en gym)', km: 8, done: true, effort: 5, pace: '6\'', notes: '' },
+                    { day: 'Jueves', type: 'Gimnasio', details: 'Piernas + core + movilidad (45\')', km: 0, done: true, effort: 7, pace: '', notes: '' },
+                    { day: 'Finde', type: 'Running', details: 'Tirada larga suave', km: 12, done: false, effort: null, pace: '', notes: '' },
+                ],
+                totalKm: 34
+            },
+            {
+                week: 2,
+                days: [
+                    { day: 'Lunes', type: 'Gimnasio', details: 'Piernas + core', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Martes', type: 'Running', details: 'Rodaje suave', km: 9, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Miércoles', type: 'Running', details: '2 km suave + 4 km tempo + 1 km suave', km: 7, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Running', details: 'Rodaje suave (en gym)', km: 8, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Gimnasio', details: 'Piernas + core + movilidad (45\')', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Finde', type: 'Running', details: 'Tirada larga suave', km: 14, done: false, effort: null, pace: '', notes: '' },
+                ],
+                totalKm: 38
+            },
+            {
+                week: 3,
+                days: [
+                    { day: 'Lunes', type: 'Gimnasio', details: 'Piernas + core', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Martes', type: 'Running', details: 'Rodaje suave', km: 10, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Miércoles', type: 'Running', details: '2 km suave + 5 km tempo + 1 km suave', km: 8, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Running', details: 'Rodaje suave (en gym)', km: 8, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Gimnasio', details: 'Piernas + core + movilidad (45\')', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Finde', type: 'Running', details: 'Tirada larga suave', km: 16, done: false, effort: null, pace: '', notes: '' },
+                ],
+                totalKm: 42
+            },
+            {
+                week: 4,
+                days: [
+                    { day: 'Lunes', type: 'Gimnasio', details: 'Liviana + movilidad', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Martes', type: 'Running', details: 'Rodaje suave', km: 8, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Miércoles', type: 'Running', details: 'Progresivo (5:45 → 4:50)', km: 6, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Running', details: 'Rodaje suave (en gym)', km: 8, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Gimnasio', details: 'Piernas + core + movilidad (45\')', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Finde', type: 'Running', details: 'Tirada larga cómoda', km: 14, done: false, effort: null, pace: '', notes: '' },
+                ],
+                totalKm: 36
+            },
+            {
+                week: 5,
+                days: [
+                    { day: 'Lunes', type: 'Gimnasio', details: 'Piernas + core', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Martes', type: 'Running', details: 'Rodaje suave', km: 10, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Miércoles', type: 'Running', details: '2 km suave + 2x3 km tempo (1\' trote) + 1 km suave', km: 9, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Running', details: 'Rodaje suave (en gym)', km: 8, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Gimnasio', details: 'Piernas + core + movilidad (45\')', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Finde', type: 'Running', details: 'Tirada larga suave', km: 18, done: false, effort: null, pace: '', notes: '' },
+                ],
+                totalKm: 45
+            },
+            {
+                week: 6,
+                days: [
+                    { day: 'Lunes', type: 'Gimnasio', details: 'Piernas + core', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Martes', type: 'Running', details: 'Rodaje suave', km: 10, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Miércoles', type: 'Running', details: '2 km suave + 6 km tempo + 1 km suave', km: 9, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Running', details: 'Rodaje suave (en gym)', km: 9, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Gimnasio', details: 'Piernas + core + movilidad (45\')', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Finde', type: 'Running', details: '18 km (últimos 3 km a ~5:30)', km: 18, done: false, effort: null, pace: '', notes: '' },
+                ],
+                totalKm: 46
+            },
+            {
+                week: 7,
+                days: [
+                    { day: 'Lunes', type: 'Gimnasio', details: 'Piernas + core', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Martes', type: 'Running', details: 'Rodaje suave', km: 11, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Miércoles', type: 'Running', details: '2 km suave + 3x2 km tempo (1\' trote) + 2 km suave', km: 10, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Running', details: 'Rodaje suave (en gym)', km: 9, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Gimnasio', details: 'Piernas + core + movilidad (45\')', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Finde', type: 'Running', details: 'Tirada larga suave', km: 20, done: false, effort: null, pace: '', notes: '' },
+                ],
+                totalKm: 50
+            },
+            {
+                week: 8,
+                days: [
+                    { day: 'Lunes', type: 'Gimnasio', details: 'Muy liviana + movilidad', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Martes', type: 'Running', details: 'Rodaje suave', km: 9, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Miércoles', type: 'Running', details: 'Progresivo', km: 7, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Running', details: 'Rodaje suave (en gym)', km: 8, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Jueves', type: 'Gimnasio', details: 'Piernas + core + movilidad (45\')', km: 0, done: false, effort: null, pace: '', notes: '' },
+                    { day: 'Finde', type: 'Running', details: 'Tirada larga cómoda', km: 16, done: false, effort: null, pace: '', notes: '' },
+                ],
+                totalKm: 40
+            }
+        ];
+
+        const paceReference = [
+            { type: 'Ritmo maratón (RM)', pace: '4:55–5:05 /km' },
+            { type: 'Rodaje suave (RS)', pace: '5:45–6:15 /km' },
+            { type: 'Tempo / umbral', pace: '4:35–4:50 /km' },
+            { type: 'Progresivos', pace: 'terminar cerca de 4:40–4:50' }
+        ];
+
+        function App() {
+            const [data, setData] = useState(() => {
+                const saved = localStorage.getItem('trainingData');
+                return saved ? JSON.parse(saved) : initialData;
+            });
+            const [activeTab, setActiveTab] = useState('plan');
+            const [showModal, setShowModal] = useState(false);
+            const [newWeekDays, setNewWeekDays] = useState([
+                { day: 'Lunes', type: 'Running', details: '', km: 0 }
+            ]);
+
+            useEffect(() => {
+                localStorage.setItem('trainingData', JSON.stringify(data));
+            }, [data]);
+
+            const toggleDone = (weekIdx, dayIdx) => {
+                const newData = [...data];
+                newData[weekIdx].days[dayIdx].done = !newData[weekIdx].days[dayIdx].done;
+                setData(newData);
+            };
+
+            const updateEffort = (weekIdx, dayIdx, value) => {
+                const newData = [...data];
+                newData[weekIdx].days[dayIdx].effort = value ? parseInt(value) : null;
+                setData(newData);
+            };
+
+            const updatePace = (weekIdx, dayIdx, value) => {
+                const newData = [...data];
+                newData[weekIdx].days[dayIdx].pace = value;
+                setData(newData);
+            };
+
+            const addDay = () => {
+                setNewWeekDays([...newWeekDays, { day: 'Lunes', type: 'Running', details: '', km: 0 }]);
+            };
+
+            const removeDay = (idx) => {
+                if (newWeekDays.length > 1) {
+                    setNewWeekDays(newWeekDays.filter((_, i) => i !== idx));
+                }
+            };
+
+            const updateNewDay = (idx, field, value) => {
+                const updated = [...newWeekDays];
+                updated[idx][field] = field === 'km' ? parseInt(value) || 0 : value;
+                setNewWeekDays(updated);
+            };
+
+            const saveNewWeek = () => {
+                const totalKm = newWeekDays.reduce((sum, day) => sum + day.km, 0);
+                const newWeek = {
+                    week: data.length + 1,
+                    days: newWeekDays.map(day => ({
+                        ...day,
+                        done: false,
+                        effort: null,
+                        pace: '',
+                        notes: ''
+                    })),
+                    totalKm
+                };
+                setData([...data, newWeek]);
+                setShowModal(false);
+                setNewWeekDays([{ day: 'Lunes', type: 'Running', details: '', km: 0 }]);
+            };
+
+            const deleteWeek = (weekIdx) => {
+                if (confirm(`¿Estás seguro de eliminar la Semana ${data[weekIdx].week}?`)) {
+                    const newData = data.filter((_, idx) => idx !== weekIdx)
+                        .map((week, idx) => ({ ...week, week: idx + 1 }));
+                    setData(newData);
+                }
+            };
+
+            const totalCompleted = data.reduce((acc, week) => 
+                acc + week.days.filter(d => d.done).length, 0
+            );
+
+            const totalKm = data.reduce((acc, week) => acc + week.totalKm, 0);
+
+            const completedKm = data.reduce((acc, week) => 
+                acc + week.days.filter(d => d.done).reduce((sum, d) => sum + d.km, 0), 0
+            );
+
+            const avgEffort = (() => {
+                const efforts = data.flatMap(w => w.days)
+                    .filter(d => d.done && d.effort !== null)
+                    .map(d => d.effort);
+                return efforts.length > 0 
+                    ? (efforts.reduce((a, b) => a + b, 0) / efforts.length).toFixed(1)
+                    : '-';
+            })();
+
+            return (
+                <div className="app">
+                    <div className="header">
+                        <div className="header-content">
+                            <h1>🏃‍♂️ Plan de Entrenamiento</h1>
+                            <p>Gestiona tus entrenamientos, registra tu progreso y alcanza tus metas</p>
+                        </div>
+                    </div>
+
+                    <div className="stats-bar">
+                        <div className="stat-card">
+                            <div className="stat-icon">📊</div>
+                            <div className="stat-info">
+                                <h3>Entrenamientos</h3>
+                                <p>{totalCompleted} / {data.reduce((acc, w) => acc + w.days.length, 0)}</p>
+                            </div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-icon">📏</div>
+                            <div className="stat-info">
+                                <h3>Kilómetros</h3>
+                                <p>{completedKm} / {totalKm}</p>
+                            </div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-icon">💪</div>
+                            <div className="stat-info">
+                                <h3>Esfuerzo promedio</h3>
+                                <p>{avgEffort} / 10</p>
+                            </div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-icon">🎯</div>
+                            <div className="stat-info">
+                                <h3>Progreso</h3>
+                                <p>{Math.round((completedKm / totalKm) * 100)}%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="tabs">
+                        <button 
+                            className={`tab ${activeTab === 'plan' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('plan')}
+                        >
+                            📅 Plan de entrenamiento
+                        </button>
+                        <button 
+                            className={`tab ${activeTab === 'reference' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('reference')}
+                        >
+                            ⚡ Referencia de ritmos
+                        </button>
+                    </div>
+
+                    {activeTab === 'plan' && (
+                        <>
+                            <div className="weeks-grid">
+                                {data.map((week, weekIdx) => (
+                                    <div key={week.week} className="week-card" style={{animationDelay: `${weekIdx * 0.1}s`}}>
+                                        <div className="week-header">
+                                            <div className="week-title">
+                                                <div className="week-number">{week.week}</div>
+                                                <div className="week-info">
+                                                    <h3>Semana {week.week}</h3>
+                                                    <p>{week.days.filter(d => d.done).length} de {week.days.length} completados</p>
+                                                </div>
+                                            </div>
+                                            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                                                <div className="week-total">
+                                                    <span>Total semanal</span>
+                                                    <strong>{week.totalKm} km</strong>
+                                                </div>
+                                                <button 
+                                                    className="delete-week-btn"
+                                                    onClick={() => deleteWeek(weekIdx)}
+                                                >
+                                                    🗑️
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="training-grid">
+                                            {week.days.map((day, dayIdx) => (
+                                                <div key={dayIdx} className={`training-row ${day.done ? 'completed' : ''}`}>
+                                                    <div className="day-label">{day.day}</div>
+                                                    <span className={`training-type ${day.type.toLowerCase()}`}>
+                                                        {day.type}
+                                                    </span>
+                                                    <div className="training-details">
+                                                        <h4>{day.details}</h4>
+                                                        {day.km > 0 && <p>{day.km} km</p>}
+                                                    </div>
+                                                    <div className="training-metrics">
+                                                        {day.km > 0 && (
+                                                            <>
+                                                                <div className="metric">
+                                                                    <label>Esfuerzo</label>
+                                                                    <input 
+                                                                        type="number" 
+                                                                        min="1" 
+                                                                        max="10"
+                                                                        value={day.effort || ''}
+                                                                        onChange={(e) => updateEffort(weekIdx, dayIdx, e.target.value)}
+                                                                        placeholder="-"
+                                                                    />
+                                                                </div>
+                                                                <div className="metric">
+                                                                    <label>Ritmo</label>
+                                                                    <input 
+                                                                        type="text" 
+                                                                        value={day.pace}
+                                                                        onChange={(e) => updatePace(weekIdx, dayIdx, e.target.value)}
+                                                                        placeholder="0:00"
+                                                                        style={{width: '100px'}}
+                                                                    />
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                        <div 
+                                                            className={`checkbox ${day.done ? 'checked' : ''}`}
+                                                            onClick={() => toggleDone(weekIdx, dayIdx)}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="add-week-container">
+                                <button className="add-week-btn" onClick={() => setShowModal(true)}>
+                                    ➕ Agregar nueva semana
+                                </button>
+                            </div>
+                        </>
+                    )}
+
+                    {activeTab === 'reference' && (
+                        <div className="pace-reference">
+                            <h3>⚡ Referencia de Ritmos</h3>
+                            <div className="pace-grid">
+                                {paceReference.map((item, idx) => (
+                                    <div key={idx} className="pace-item">
+                                        <h4>{item.type}</h4>
+                                        <p>{item.pace}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {showModal && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal" onClick={(e) => e.stopPropagation()}>
+                                <h2>📅 Nueva Semana de Entrenamiento</h2>
+                                
+                                <div className="training-form">
+                                    {newWeekDays.map((day, idx) => (
+                                        <div key={idx} className="form-row">
+                                            <select 
+                                                value={day.day}
+                                                onChange={(e) => updateNewDay(idx, 'day', e.target.value)}
+                                            >
+                                                <option>Lunes</option>
+                                                <option>Martes</option>
+                                                <option>Miércoles</option>
+                                                <option>Jueves</option>
+                                                <option>Viernes</option>
+                                                <option>Sábado</option>
+                                                <option>Domingo</option>
+                                                <option>Finde</option>
+                                            </select>
+                                            <select 
+                                                value={day.type}
+                                                onChange={(e) => updateNewDay(idx, 'type', e.target.value)}
+                                            >
+                                                <option>Running</option>
+                                                <option>Gimnasio</option>
+                                            </select>
+                                            <input 
+                                                type="text"
+                                                placeholder="Detalles del entrenamiento"
+                                                value={day.details}
+                                                onChange={(e) => updateNewDay(idx, 'details', e.target.value)}
+                                            />
+                                            <input 
+                                                type="number"
+                                                placeholder="Km"
+                                                min="0"
+                                                value={day.km || ''}
+                                                onChange={(e) => updateNewDay(idx, 'km', e.target.value)}
+                                            />
+                                            <button 
+                                                className="remove-day-btn"
+                                                onClick={() => removeDay(idx)}
+                                                disabled={newWeekDays.length === 1}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <button className="add-day-btn" onClick={addDay}>
+                                    ➕ Agregar día
+                                </button>
+
+                                <div style={{marginTop: '1rem', padding: '1rem', background: 'var(--bg-dark)', borderRadius: '10px', border: '1px solid var(--border)'}}>
+                                    <strong>Total semanal: {newWeekDays.reduce((sum, day) => sum + day.km, 0)} km</strong>
+                                </div>
+
+                                <div className="modal-actions">
+                                    <button className="btn btn-cancel" onClick={() => setShowModal(false)}>
+                                        Cancelar
+                                    </button>
+                                    <button className="btn btn-save" onClick={saveNewWeek}>
+                                        Guardar semana
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
