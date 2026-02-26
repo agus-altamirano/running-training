@@ -169,6 +169,53 @@
             border-bottom-color: var(--primary);
         }
 
+        /* Filter Bar */
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            borderRadius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .filter-info {
+            padding: 0.75rem;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
         /* Week Cards */
         .weeks-grid {
             display: grid;
@@ -238,6 +285,12 @@
             font-size: 0.875rem;
         }
 
+        .week-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
         .week-total {
             text-align: right;
         }
@@ -259,6 +312,38 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+
+        .collapse-btn {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .collapse-btn:hover {
+            border-color: var(--primary);
+            background: var(--bg-card-hover);
+        }
+
+        .delete-week-btn {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .delete-week-btn:hover {
+            background: rgba(244, 67, 54, 0.3);
         }
 
         /* Training Grid */
@@ -351,45 +436,6 @@
             margin-bottom: 0.25rem;
         }
 
-        .metric-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .checkbox:hover {
-            border-color: var(--primary);
-        }
-
-        .checkbox.checked {
-            background: linear-gradient(135deg, var(--success) 0%, #388E3C 100%);
-            border-color: var(--success);
-        }
-
-        .checkbox.checked::after {
-            content: '✓';
-            color: white;
-            font-weight: bold;
-        }
-
-        /* Input Fields */
         input[type="number"], input[type="text"] {
             background: var(--bg-dark);
             border: 1px solid var(--border);
@@ -409,9 +455,250 @@
             box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
         }
 
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            opacity: 1;
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox:hover {
+            border-color: var(--primary);
+        }
+
+        .checkbox.checked {
+            background: linear-gradient(135deg, var(--success) 0%, #388E3C 100%);
+            border-color: var(--success);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .pagination-btn {
+            background: var(--primary);
+            color: white;
+            border: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:disabled {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .pagination-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+        }
+
+        .pagination-numbers {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .page-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-number.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+        }
+
+        .page-number:not(.active):hover {
+            border-color: var(--primary);
+        }
+
+        /* Add Week Button */
+        .add-week-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .add-week-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-week-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 87, 34, 0.4);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .training-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 100px 120px 1fr 80px auto;
+            gap: 0.75rem;
+            align-items: center;
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .form-row select,
+        .form-row input {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-row select {
+            cursor: pointer;
+        }
+
+        .form-row input[type="text"] {
+            width: 100%;
+        }
+
+        .form-row input[type="number"] {
+            text-align: center;
+        }
+
+        .remove-day-btn {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-day-btn {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: var(--success);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-cancel {
+            background: var(--bg-dark);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
         }
 
         /* Pace Reference */
@@ -426,9 +713,6 @@
         .pace-reference h3 {
             font-size: 1.25rem;
             margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .pace-grid {
@@ -465,231 +749,6 @@
             color: var(--primary);
         }
 
-        /* Add Week Button */
-        .add-week-container {
-            margin-top: 1.5rem;
-            display: flex;
-            justify-content: center;
-        }
-
-        .add-week-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border: none;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
-        }
-
-        .add-week-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(255, 87, 34, 0.4);
-        }
-
-        .add-week-btn:active {
-            transform: translateY(0);
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 2rem;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal h2 {
-            font-size: 1.75rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-purple) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .training-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 100px 120px 1fr 80px;
-            gap: 0.75rem;
-            align-items: center;
-            background: var(--bg-dark);
-            padding: 1rem;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
-        .form-row select,
-        .form-row input {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.5rem 0.75rem;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-
-        .form-row select {
-            cursor: pointer;
-        }
-
-        .form-row input[type="text"] {
-            width: 100%;
-        }
-
-        .form-row input[type="number"] {
-            text-align: center;
-        }
-
-        .form-row select:focus,
-        .form-row input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
-        }
-
-        .remove-day-btn {
-            background: rgba(244, 67, 54, 0.2);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            color: #f44336;
-            padding: 0.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .remove-day-btn:hover {
-            background: rgba(244, 67, 54, 0.3);
-        }
-
-        .add-day-btn {
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            color: var(--success);
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .add-day-btn:hover {
-            background: rgba(76, 175, 80, 0.3);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-            margin-top: 1.5rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            font-size: 1rem;
-        }
-
-        .btn-cancel {
-            background: var(--bg-dark);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-cancel:hover {
-            background: var(--bg-card-hover);
-            color: var(--text-primary);
-        }
-
-        .btn-save {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-        }
-
-        .btn-save:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
-        }
-
-        /* Delete Week Button */
-        .delete-week-btn {
-            background: rgba(244, 67, 54, 0.2);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            color: #f44336;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .delete-week-btn:hover {
-            background: rgba(244, 67, 54, 0.3);
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .training-row {
@@ -709,35 +768,29 @@
             .app {
                 padding: 1rem;
             }
-        }
 
-        /* Animations */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
 
-        .loading {
-            animation: pulse 2s ease-in-out infinite;
-        }
+            .week-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
+            .week-total {
+                text-align: left;
+            }
 
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
+            .week-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
+            .filter-bar {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -863,6 +916,10 @@
             const [newWeekDays, setNewWeekDays] = useState([
                 { day: 'Lunes', type: 'Running', details: '', km: 0 }
             ]);
+            const [collapsedWeeks, setCollapsedWeeks] = useState({});
+            const [currentPage, setCurrentPage] = useState(1);
+            const [weeksPerPage] = useState(4);
+            const [filterWeek, setFilterWeek] = useState('');
 
             useEffect(() => {
                 localStorage.setItem('trainingData', JSON.stringify(data));
@@ -927,6 +984,22 @@
                     setData(newData);
                 }
             };
+
+            const toggleCollapse = (weekIdx) => {
+                setCollapsedWeeks(prev => ({
+                    ...prev,
+                    [weekIdx]: !prev[weekIdx]
+                }));
+            };
+
+            const filteredData = filterWeek 
+                ? data.filter(week => week.week === parseInt(filterWeek))
+                : data;
+
+            const indexOfLastWeek = currentPage * weeksPerPage;
+            const indexOfFirstWeek = indexOfLastWeek - weeksPerPage;
+            const currentWeeks = filteredData.slice(indexOfFirstWeek, indexOfLastWeek);
+            const totalPages = Math.ceil(filteredData.length / weeksPerPage);
 
             const totalCompleted = data.reduce((acc, week) => 
                 acc + week.days.filter(d => d.done).length, 0
@@ -1004,79 +1077,158 @@
 
                     {activeTab === 'plan' && (
                         <>
-                            <div className="weeks-grid">
-                                {data.map((week, weekIdx) => (
-                                    <div key={week.week} className="week-card" style={{animationDelay: `${weekIdx * 0.1}s`}}>
-                                        <div className="week-header">
-                                            <div className="week-title">
-                                                <div className="week-number">{week.week}</div>
-                                                <div className="week-info">
-                                                    <h3>Semana {week.week}</h3>
-                                                    <p>{week.days.filter(d => d.done).length} de {week.days.length} completados</p>
-                                                </div>
-                                            </div>
-                                            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                                                <div className="week-total">
-                                                    <span>Total semanal</span>
-                                                    <strong>{week.totalKm} km</strong>
-                                                </div>
-                                                <button 
-                                                    className="delete-week-btn"
-                                                    onClick={() => deleteWeek(weekIdx)}
-                                                >
-                                                    🗑️
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div className="training-grid">
-                                            {week.days.map((day, dayIdx) => (
-                                                <div key={dayIdx} className={`training-row ${day.done ? 'completed' : ''}`}>
-                                                    <div className="day-label">{day.day}</div>
-                                                    <span className={`training-type ${day.type.toLowerCase()}`}>
-                                                        {day.type}
-                                                    </span>
-                                                    <div className="training-details">
-                                                        <h4>{day.details}</h4>
-                                                        {day.km > 0 && <p>{day.km} km</p>}
-                                                    </div>
-                                                    <div className="training-metrics">
-                                                        {day.km > 0 && (
-                                                            <>
-                                                                <div className="metric">
-                                                                    <label>Esfuerzo</label>
-                                                                    <input 
-                                                                        type="number" 
-                                                                        min="1" 
-                                                                        max="10"
-                                                                        value={day.effort || ''}
-                                                                        onChange={(e) => updateEffort(weekIdx, dayIdx, e.target.value)}
-                                                                        placeholder="-"
-                                                                    />
-                                                                </div>
-                                                                <div className="metric">
-                                                                    <label>Ritmo</label>
-                                                                    <input 
-                                                                        type="text" 
-                                                                        value={day.pace}
-                                                                        onChange={(e) => updatePace(weekIdx, dayIdx, e.target.value)}
-                                                                        placeholder="0:00"
-                                                                        style={{width: '100px'}}
-                                                                    />
-                                                                </div>
-                                                            </>
-                                                        )}
-                                                        <div 
-                                                            className={`checkbox ${day.done ? 'checked' : ''}`}
-                                                            onClick={() => toggleDone(weekIdx, dayIdx)}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
+                            <div className="filter-bar">
+                                <div className="filter-group">
+                                    <label className="filter-label">🔍 Filtrar por semana</label>
+                                    <select
+                                        className="filter-select"
+                                        value={filterWeek}
+                                        onChange={(e) => {
+                                            setFilterWeek(e.target.value);
+                                            setCurrentPage(1);
+                                        }}
+                                    >
+                                        <option value="">Todas las semanas</option>
+                                        {data.map(week => (
+                                            <option key={week.week} value={week.week}>Semana {week.week}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                
+                                <div className="filter-group">
+                                    <label className="filter-label">📄 Mostrar</label>
+                                    <div className="filter-info">
+                                        {weeksPerPage} semanas por página
                                     </div>
-                                ))}
+                                </div>
+
+                                <div className="filter-group">
+                                    <label className="filter-label">📊 Resultados</label>
+                                    <div className="filter-info">
+                                        {filteredData.length} semana{filteredData.length !== 1 ? 's' : ''}
+                                    </div>
+                                </div>
                             </div>
+
+                            <div className="weeks-grid">
+                                {currentWeeks.map((week, displayIdx) => {
+                                    const weekIdx = data.findIndex(w => w.week === week.week);
+                                    const isCollapsed = collapsedWeeks[weekIdx];
+                                    
+                                    return (
+                                        <div key={week.week} className="week-card" style={{animationDelay: `${displayIdx * 0.1}s`}}>
+                                            <div className="week-header">
+                                                <div className="week-title">
+                                                    <div className="week-number">{week.week}</div>
+                                                    <div className="week-info">
+                                                        <h3>Semana {week.week}</h3>
+                                                        <p>{week.days.filter(d => d.done).length} de {week.days.length} completados</p>
+                                                    </div>
+                                                </div>
+                                                <div className="week-actions">
+                                                    <div className="week-total">
+                                                        <span>Total semanal</span>
+                                                        <strong>{week.totalKm} km</strong>
+                                                    </div>
+                                                    <button 
+                                                        className="collapse-btn"
+                                                        onClick={() => toggleCollapse(weekIdx)}
+                                                        title={isCollapsed ? 'Expandir' : 'Colapsar'}
+                                                    >
+                                                        {isCollapsed ? '▼' : '▲'}
+                                                    </button>
+                                                    <button 
+                                                        className="delete-week-btn"
+                                                        onClick={() => deleteWeek(weekIdx)}
+                                                    >
+                                                        🗑️
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {!isCollapsed && (
+                                                <div className="training-grid">
+                                                    {week.days.map((day, dayIdx) => (
+                                                        <div key={dayIdx} className={`training-row ${day.done ? 'completed' : ''}`}>
+                                                            <div className="day-label">{day.day}</div>
+                                                            <span className={`training-type ${day.type.toLowerCase()}`}>
+                                                                {day.type}
+                                                            </span>
+                                                            <div className="training-details">
+                                                                <h4>{day.details}</h4>
+                                                                {day.km > 0 && <p>{day.km} km</p>}
+                                                            </div>
+                                                            <div className="training-metrics">
+                                                                {day.km > 0 && (
+                                                                    <>
+                                                                        <div className="metric">
+                                                                            <label>Esfuerzo</label>
+                                                                            <input 
+                                                                                type="number" 
+                                                                                min="1" 
+                                                                                max="10"
+                                                                                value={day.effort || ''}
+                                                                                onChange={(e) => updateEffort(weekIdx, dayIdx, e.target.value)}
+                                                                                placeholder="-"
+                                                                            />
+                                                                        </div>
+                                                                        <div className="metric">
+                                                                            <label>Ritmo</label>
+                                                                            <input 
+                                                                                type="text" 
+                                                                                value={day.pace}
+                                                                                onChange={(e) => updatePace(weekIdx, dayIdx, e.target.value)}
+                                                                                placeholder="0:00"
+                                                                                style={{width: '100px'}}
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                                <div 
+                                                                    className={`checkbox ${day.done ? 'checked' : ''}`}
+                                                                    onClick={() => toggleDone(weekIdx, dayIdx)}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {totalPages > 1 && (
+                                <div className="pagination">
+                                    <button
+                                        className="pagination-btn"
+                                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                        disabled={currentPage === 1}
+                                    >
+                                        ← Anterior
+                                    </button>
+                                    
+                                    <div className="pagination-numbers">
+                                        {Array.from({length: totalPages}, (_, i) => i + 1).map(page => (
+                                            <button
+                                                key={page}
+                                                className={`page-number ${currentPage === page ? 'active' : ''}`}
+                                                onClick={() => setCurrentPage(page)}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <button
+                                        className="pagination-btn"
+                                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                        disabled={currentPage === totalPages}
+                                    >
+                                        Siguiente →
+                                    </button>
+                                </div>
+                            )}
 
                             <div className="add-week-container">
                                 <button className="add-week-btn" onClick={() => setShowModal(true)}>
