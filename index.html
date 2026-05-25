@@ -605,6 +605,70 @@
             display: none;
         }
 
+        /* Update Banner */
+        .update-banner {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .update-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .update-banner-icon {
+            font-size: 1.5rem;
+        }
+
+        .update-banner-text h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .update-banner-text p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .update-banner-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .update-banner-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
         /* Modal */
         .modal-overlay {
             position: fixed;
@@ -1067,6 +1131,16 @@
             .pace-item p {
                 font-size: 1rem;
             }
+
+            .update-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .update-banner-close {
+                align-self: flex-end;
+            }
         }
 
         /* Extra small devices */
@@ -1289,6 +1363,42 @@
                     { day: "Finde", type: "Running", details: "Tirada larga cómoda", km: 18, done: false, effort: null, pace: "", notes: "Sin bloque final" }
                 ],
                 totalKm: 42
+            },
+            {
+                week: 17,
+                days: [
+                    { day: "Día 1", type: "Running", details: "15' suaves + 3x12' a tempo (4:30–4:40/km) rec 3' trote + 6x100m progresivos + 10' suaves", km: 17, done: false, effort: null, pace: "", notes: "Calidad + strides" },
+                    { day: "Día 2", type: "Running", details: "22 km → 16 km a 5:20–5:30 + últimos 6 km a 4:55–5:00", km: 22, done: false, effort: null, pace: "", notes: "Tirada larga" },
+                    { day: "Opcional", type: "Running", details: "8–10 km MUY suaves (5:45–6:00/km)", km: 9, done: false, effort: null, pace: "", notes: "Rodaje suave" }
+                ],
+                totalKm: 48
+            },
+            {
+                week: 18,
+                days: [
+                    { day: "Día 1", type: "Running", details: "15' suaves + 8x25s en subida moderada + recuperación completa bajando + 20' suaves", km: 10, done: false, effort: null, pace: "", notes: "Cuestas cortas" },
+                    { day: "Día 2", type: "Running", details: "20–22 km suaves constantes (5:20–5:35/km)", km: 21, done: false, effort: null, pace: "", notes: "Tirada larga" },
+                    { day: "Opcional", type: "Running", details: "8 km suaves + 6x100m", km: 8, done: false, effort: null, pace: "", notes: "Rodaje + strides" }
+                ],
+                totalKm: 39
+            },
+            {
+                week: 19,
+                days: [
+                    { day: "Día 1", type: "Running", details: "15' suaves + 3x5 km a RM (4:50–4:55/km) rec 1 km suave + 10' suaves", km: 20, done: false, effort: null, pace: "", notes: "Ritmo maratón" },
+                    { day: "Día 2", type: "Running", details: "24 km → últimos 8 km a RM", km: 24, done: false, effort: null, pace: "", notes: "Tirada larga - Semana más importante del bloque" },
+                    { day: "Opcional", type: "Running", details: "8–10 km muy suaves", km: 9, done: false, effort: null, pace: "", notes: "Rodaje regenerativo" }
+                ],
+                totalKm: 53
+            },
+            {
+                week: 20,
+                days: [
+                    { day: "Día 1", type: "Running", details: "15' suaves + 20' tempo continuo (4:35–4:40/km) + 6x100m + 10' suaves", km: 12, done: false, effort: null, pace: "", notes: "Tempo liviano + strides" },
+                    { day: "Día 2", type: "Running", details: "18–20 km cómodos", km: 19, done: false, effort: null, pace: "", notes: "Tirada larga descarga" },
+                    { day: "Opcional", type: "Running", details: "8 km muy tranquilos", km: 8, done: false, effort: null, pace: "", notes: "Rodaje suave" }
+                ],
+                totalKm: 39
             }
         ];
 
@@ -1299,7 +1409,7 @@
             { type: 'Progresivos', pace: 'terminar cerca de 4:35–4:45 /km' }
         ];
 
-        const PLAN_VERSION = "2026-03-29-v2";
+        const PLAN_VERSION = "2026-03-29-v3-semanas17-20";
 
         function mergePlanWithSaved(savedData, planData) {
             if (!Array.isArray(savedData) || savedData.length === 0) return planData;
@@ -1352,6 +1462,10 @@
             const [currentPage, setCurrentPage] = useState(1);
             const [weeksPerPage] = useState(4);
             const [filterWeek, setFilterWeek] = useState('');
+            const [showUpdateBanner, setShowUpdateBanner] = useState(() => {
+                const savedVersion = localStorage.getItem("trainingPlanVersion");
+                return savedVersion && savedVersion !== PLAN_VERSION;
+            });
 
             useEffect(() => {
                 localStorage.setItem('trainingData', JSON.stringify(data));
@@ -1543,6 +1657,24 @@
                             <p>Gestiona tus entrenamientos, registra tu progreso y alcanza tus metas</p>
                         </div>
                     </div>
+
+                    {showUpdateBanner && (
+                        <div className="update-banner">
+                            <div className="update-banner-content">
+                                <div className="update-banner-icon">✨</div>
+                                <div className="update-banner-text">
+                                    <h4>¡Plan actualizado!</h4>
+                                    <p>Se agregaron las semanas 17-20. Tus datos anteriores se mantienen intactos.</p>
+                                </div>
+                            </div>
+                            <button 
+                                className="update-banner-close"
+                                onClick={() => setShowUpdateBanner(false)}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    )}
 
                     <div className="stats-bar">
                         <div className="stat-card">
